@@ -45,11 +45,13 @@ jobs:
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
 
       - name: 'Run Maven build'
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: >
+        run: >-
           ./mvnw -U --no-transfer-progress clean install -DSCHEMA_NAMES_TEST_ALL_VERSIONS=false -P$USE_SONAR
           -pl !org.neo4j:neo4j-cypher-dsl-examples-core
           -pl !org.neo4j:neo4j-cypher-dsl-examples-parser
@@ -76,9 +78,11 @@ jobs:
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
 
       - name: 'Run Maven build'
-        run: >
+        run: >-
           ./mvnw --no-transfer-progress clean verify -Djqassistant.skip=true
           -DenableNativeTests -pl org.neo4j:neo4j-cypher-dsl-native-tests
 
@@ -98,6 +102,8 @@ jobs:
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
 
       - name: 'Set up JDK'
         uses: actions/setup-java@c1e323688fd81a25caa38c78aa6df2d33d3e20d9 # v4.8.0
@@ -106,7 +112,7 @@ jobs:
           java-version: ${{ matrix.java }}
 
       - name: 'Run Maven build'
-        run: >
+        run: >-
           ./mvnw --no-transfer-progress clean verify -Djqassistant.skip=true
           -pl org.neo4j:neo4j-cypher-dsl-examples
           -pl org.neo4j:neo4j-cypher-dsl-examples-core
